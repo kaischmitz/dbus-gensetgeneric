@@ -53,6 +53,7 @@ class DbusGensetGenericService:
     self._dbusservice.add_path('/Connected', 1)
     self._dbusservice.add_path('/UpdateIndex', 0)
     self._dbusservice.add_path('/RemoteStartModeEnabled', 0)
+    self._dbusservice.add_path('/NrOfPhases', 3)
     
     # add paths without units
     for path in paths_wo_unit:
@@ -121,6 +122,7 @@ def main():
      
       #formatting 
       _kwh = lambda p, v: (str(round(v, 2)) + 'kWh')
+      _hz = lambda p, v: (str(round(v, 1)) + 'Hz')
       _a = lambda p, v: (str(round(v, 1)) + 'A')
       _w = lambda p, v: (str(round(v, 1)) + 'W')
       _v = lambda p, v: (str(round(v, 1)) + 'V')
@@ -134,6 +136,15 @@ def main():
           '/Ac/L1/Power': {'initial': 0, 'textformat': _w},
           '/Ac/L2/Power': {'initial': 0, 'textformat': _w},
           '/Ac/L3/Power': {'initial': 0, 'textformat': _w},
+          '/Ac/L1/Current': {'initial': 0, 'textformat': _a},
+          '/Ac/L2/Current': {'initial': 0, 'textformat': _a},
+          '/Ac/L3/Current': {'initial': 0, 'textformat': _a},
+          '/Ac/L1/Voltage': {'initial': 0, 'textformat': _v},
+          '/Ac/L2/Voltage': {'initial': 0, 'textformat': _v},
+          '/Ac/L3/Voltage': {'initial': 0, 'textformat': _v},
+          '/Ac/Power': {'initial': 0, 'textformat': _w},
+          '/Ac/Frequency': {'initial': 0, 'textformat': _hz},
+          '/Ac/Energy/Forward': {'initial': 0, 'textformat': _kwh},
           '/Engine/CoolantTemperature': {'initial': 0, 'textformat': _degC}
         }
         )
