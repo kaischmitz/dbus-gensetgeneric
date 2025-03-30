@@ -33,8 +33,8 @@ class DbusGensetGenericService:
     logging.debug("%s /DeviceInstance = %d" % (servicename, deviceinstance))
     
     paths_wo_unit = [
-      '/StatusCode',  # 0=Standby; 1..7=Startup; 8=Running; 9=Stopping; 10=Error
-      '/ErrorCode'
+      '/StatusCode', # 0=Standby; 1..7=Startup; 8=Running; 9=Stopping; 10=Error
+      '/Start'
     ]
     
     # Create the management objects, as specified in the ccgx dbus-api document
@@ -44,7 +44,7 @@ class DbusGensetGenericService:
     
     # Create the mandatory objects
     self._dbusservice.add_path('/DeviceInstance', deviceinstance)
-    self._dbusservice.add_path('/ProductId', 0xFFFF)
+    self._dbusservice.add_path('/ProductId', 45126) # ID of a DSE generator - will enable engine readings and icon in VRM
     self._dbusservice.add_path('/ProductName', productname)
     self._dbusservice.add_path('/CustomName', customname)    
     self._dbusservice.add_path('/FirmwareVersion', 0, writeable=True)
@@ -52,8 +52,10 @@ class DbusGensetGenericService:
     self._dbusservice.add_path('/HardwareVersion', 0, writeable=True)
     self._dbusservice.add_path('/Connected', 1)
     self._dbusservice.add_path('/UpdateIndex', 0)
-    self._dbusservice.add_path('/RemoteStartModeEnabled', 0)
+    self._dbusservice.add_path('/RemoteStartModeEnabled', 1)
     self._dbusservice.add_path('/NrOfPhases', 3)
+    self._dbusservice.add_path('/EnableRemoteStartMode', 1)
+    self._dbusservice.add_path('/Role', "genset")
     
     # add paths without units
     for path in paths_wo_unit:
@@ -133,6 +135,8 @@ def main():
       pvac_output = DbusGensetGenericService(
         servicename='com.victronenergy.genset',
         paths={
+          # comment out parameters that your system does not have
+          #  then they will appear as a dash instead of 0
           '/Ac/L1/Power': {'initial': 0, 'textformat': _w},
           '/Ac/L2/Power': {'initial': 0, 'textformat': _w},
           '/Ac/L3/Power': {'initial': 0, 'textformat': _w},
